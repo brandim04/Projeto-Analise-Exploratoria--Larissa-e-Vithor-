@@ -1,105 +1,36 @@
-## 📄 Arquivo README.md
+# Projeto Olist Brazilian E-Commerce
 
-Aqui está o arquivo **README.md** completo, formatado em Markdown, consolidando o projeto de pré-processamento de dados.
+## 👥 Nome dos Integrantes
+- Larissa e Vithor
 
----
+## 🔗 Link da base de dados utilizada
+- [Olist Brazilian E-Commerce Dataset no Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
 
-### 👥 Nome dos Integrantes
+## 🎯 Objetivo do projeto
+Investigar os fatores que afetam a experiência e satisfação do cliente no e-commerce brasileiro. O foco é entender padrões relacionados a atrasos de entrega, satisfação do cliente, diferenças de preço e frete, categorias de produtos problemáticas e variações no tempo de processamento e envio. O projeto enfatiza pré-processamento e análise exploratória, sem a criação de modelos de IA ou classificação.
 
-* [Larissa Brandim]
-* [Vithor Gabriel]
+## 🛠️ Descrição do processo de tratamento dos dados
+O tratamento dos dados envolveu diversas etapas:
 
----
+1. **Limpeza**: remoção de duplicatas, padronização de strings, tratamento de valores ausentes e identificação de outliers.  
+2. **Conversão e padronização de tipos**: datas convertidas para datetime, valores numéricos padronizados e strings uniformizadas.  
+3. **Codificação de dados categóricos**: one-hot encoding para status de pedidos e frequency encoding para categorias de produtos.  
+4. **Normalização e padronização**: MinMaxScaler para preço e frete, Z-score para tempo de entrega e número de itens.  
+5. **Seleção de atributos**: remoção de colunas de baixa variância, altamente correlacionadas ou com muitos valores ausentes.  
+6. **Feature engineering**: criação de novas métricas como tempo de entrega, atraso na entrega, itens por pedido, valor total do pedido, frete total e razão frete/preço.  
+7. **Pipeline de pré-processamento**: todas as etapas anteriores foram consolidadas em um pipeline para aplicação automatizada em novos dados.
 
-### 🔗 Link da Base de Dados Utilizada
+## ⚠️ Principais desafios encontrados
+- Identificação de duplicatas e inconsistências nos nomes de produtos e categorias.  
+- Presença de outliers significativos em preço e frete que refletem situações reais, exigindo cuidado na análise.  
+- Padronização e codificação de múltiplos atributos categóricos para permitir análise estatística consistente.  
+- Integração dos três datasets principais em um único DataFrame consolidado para análise completa.
 
-A base de dados utilizada é o **Olist E-Commerce Public Dataset**, uma coleção de dados reais de pedidos feitos na Olist Store, no Brasil.
+## 📈 Principais conclusões
+- Pedidos com maior número de itens e fretes proporcionais ao preço tendem a atrasar mais.  
+- Categorias como eletrônicos e móveis apresentam maiores atrasos e fretes elevados, indicando desafios logísticos.  
+- Outliers em preço e frete refletem a realidade do mercado e não devem ser descartados automaticamente.  
+- O pré-processamento estruturado e o pipeline automatizado permitem análises consistentes, identificação de padrões relevantes e suporte à tomada de decisão estratégica no e-commerce.
 
-* **Link:** https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
-
----
-
-### 🎯 Objetivo do Projeto
-
-O objetivo principal deste projeto foi **limpar, integrar e pré-processar** múltiplos *datasets* de e-commerce para criar um único arquivo de dados transacionais, pronto para ser utilizado em tarefas de **análise avançada** e **modelagem preditiva** (ex: previsão de entrega, análise de satisfação e *clustering*).
-
----
-
-### 🛠️ Descrição do Processo de Tratamento dos Dados
-
-O processo de tratamento seguiu um rigoroso **Pipeline de Pré-processamento** (Item 12), garantindo integridade dos dados para análises e modelos.
-
----
-
-#### 1. Limpeza e Padronização Inicial (Itens 5, 6, 7)
-
-- **Conversão de Tipos:** Todas as colunas de data/hora (`object`) foram convertidas para `datetime64[ns]`.
-- **Padronização de Texto:** Colunas categóricas (ex: `order_status`) foram padronizadas com `.str.title()`.
-- **Tratamento de Duplicatas e NaNs:**  
-  - Remoção de linhas duplicadas  
-  - Imputação da **mediana** para valores ausentes em colunas numéricas (ex: dimensões de produtos)
-
----
-
-#### 2. Tratamento de Outliers (Item 5.4)
-
-- **Identificação por Z-score:** Outliers foram identificados nas variáveis `price` e `product_weight_g`.
-- **Decisão:** Mantivemos os outliers, pois representam transações reais e são importantes para análises de receita e logística.
-
----
-
-#### 3. Engenharia de Features (Item 11)
-
-Foram criados atributos essenciais para a análise de e-commerce:
-
-- `total_value` — Preço total do item (Preço + Frete)
-- `freight_ratio` — Razão Frete/Preço
-- `shipping_month` e `shipping_year` — Extração temporal
-- `price_category` — Faixas de preço: 'Muito Barato', 'Barato', 'Normal', 'Caro', 'Muito Caro'
-
----
-
-#### 4. Codificação e Scaling (Itens 8, 9)
-
-- **Codificação Categórica:** One-Hot Encoding via `pd.get_dummies()`
-- **Normalização:**  
-  - MinMaxScaler aplicado a `price`
-
----
-
-#### 5. Seleção de Atributos (Item 10)
-
-- **Baixa Variância:** Remoção de colunas quase constantes
-- **Remoção de IDs:** `order_id`, `customer_id` etc., por não terem valor preditivo
-- **Correlação:** Avaliada especialmente entre `price` e `freight_value`
-
----
-
-### 🚧 Principais Desafios Encontrados
-
-1. **Integração de Múltiplos Arquivos:** Unificação correta dos 8 *datasets* exigiu atenção às chaves.
-2. **Datas e NaNs:** Pedidos incompletos/cancelados geraram valores `NaT` complexos de tratar.
-3. **Alta Cardinalidade:** *Features* como `product_id` foram removidas devido ao alto custo computacional.
-
----
-
-### 📊 Principais Conclusões
-
-- A relação **Preço vs. Frete** mostrou impacto direto nos custos logísticos.
-- A categorização de preço ajudou a suavizar distribuições assimétricas.
-- O pré-processamento resultou em um *dataset* altamente confiável, viável para análises como:
-  - previsão de entregas  
-  - estudo de satisfação  
-  - KPIs de negócio  
-
----
-
-### 📁 Arquivo CSV Final
-
-O arquivo gerado ao final do processo foi:
-
-**`olist_ecommerce_cleaned_processed.csv`**
-
-Esse arquivo contém todos os dados integrados, limpos, transformados e prontos para análises avançadas ou Machine Learning.
-
----
+## 📄 Link do relatório final
+- [Relatório completo do projeto](https://docs.google.com/document/d/1TRiI1tIYXRMPENyx6auCkeSbUpWdA6fbgWxIK61w_xs/edit?usp=sharing)
